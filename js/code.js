@@ -1,47 +1,88 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  // Formularioa eta taula jaso
   const setupForm = document.getElementById("setup-form");
   const board = document.getElementById("board");
+  const keyboard = document.getElementById("keyboard");
 
-  // Inprimakia bidaltzean jokoa hasieratzeko gezi-funtzioa
+  // Teklatuaren errenkadak (Irudiaren egitura bera)
+  const KEYBOARD_LAYOUT = [
+    ['Á', 'É', 'Í', 'Ó', 'Ú'],
+    ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ñ'],
+    ['Enter', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'DEL']
+  ];
+
   const iniciarJuego = (event) => {
-    event.preventDefault(); // Orria berriro kargatzea saihestu
+    event.preventDefault();
 
-    // Hautatutako balioak irakurri
     const intentosSeleccionados = parseInt(document.getElementById("intentos").value, 10);
     const letrasSeleccionadas = parseInt(document.getElementById("letras").value, 10);
 
-    // Inprimakia ezkutatu
     setupForm.style.display = "none";
 
-    // Taula sortu bi for erabiliz
     crearTablero(intentosSeleccionados, letrasSeleccionadas);
+    crearTeclado();
   };
 
-
   const crearTablero = (saialdiak, hizkiak) => {
-    board.innerHTML = ''; // Edukia garbitu
-
-    // 1. FOR: Saialdiak (errenkadak)
+    board.innerHTML = '';
     for (let i = 0; i < saialdiak; i++) {
       const row = document.createElement('div');
       row.classList.add('row');
       row.dataset.row = i;
 
-      // 2. FOR: Hizkiak (gelaxkak)
       for (let j = 0; j < hizkiak; j++) {
         const cell = document.createElement('div');
         cell.classList.add('cell');
         cell.dataset.col = j;
         row.appendChild(cell);
       }
-
       board.appendChild(row);
     }
   };
 
-  // Inprimakiko submit gertaera entzun
+  /**
+   * Teklatu birtuala dinamikoki sortzen duen funtzioa
+   */
+  const crearTeclado = () => {
+    keyboard.innerHTML = '';
+
+    KEYBOARD_LAYOUT.forEach((rowKeys) => {
+      const rowContainer = document.createElement('div');
+      rowContainer.classList.add('keyboard-row');
+
+      rowKeys.forEach((keyVal) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = keyVal;
+        button.classList.add('key');
+        button.dataset.key = keyVal;
+
+        if (keyVal === 'Enter' || keyVal === 'DEL') {
+          button.classList.add('key-large');
+        }
+
+        rowContainer.appendChild(button);
+      });
+
+      keyboard.appendChild(rowContainer);
+    });
+
+    // Event Delegation bidez klikak entzun
+    keyboard.addEventListener('click', manejarPulsacion);
+  };
+
+  /**
+   * Teklatuko botoiak sakatzean exekutatzen den funtzioa
+   */
+  const manejarPulsacion = (e) => {
+    const target = e.target;
+    if (!target.classList.contains('key')) return;
+
+    const key = target.dataset.key;
+    console.log(`Sakatutako tekla: ${key}`);
+  };
+
   setupForm.addEventListener("submit", iniciarJuego);
 
 });

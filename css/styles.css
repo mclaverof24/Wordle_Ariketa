@@ -129,3 +129,48 @@ select:focus {
   box-sizing: border-box;
   user-select: none;
 }
+
+/* Teklatu birtuala */
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 24px;
+  align-items: center;
+}
+
+.keyboard-row {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.key {
+  min-width: 40px;
+  height: 52px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 6px;
+  background-color: #d3d6da;
+  color: #0f172a;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.key:hover {
+  background-color: #bbb3ba;
+}
+
+.key:active {
+  background-color: #a0a0a0;
+}
+
+.key-large {
+  min-width: 65px;
+}
