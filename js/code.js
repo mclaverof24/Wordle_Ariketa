@@ -1,35 +1,47 @@
-// DOM-a osorik kargatu arte itxaron
 document.addEventListener('DOMContentLoaded', () => {
 
-  // 1. DOMeko elementuak hautatu
-  const configForm = document.getElementById('setup-form');
-  const btnPlay = document.getElementById('btn-jugar');
+  // Formularioa eta taula jaso
+  const setupForm = document.getElementById("setup-form");
+  const board = document.getElementById("board");
 
-  // 2. Inprimakia bidaltzeko gertaera entzun
-  configForm.addEventListener('submit', (event) => {
+  // Inprimakia bidaltzean jokoa hasieratzeko gezi-funtzioa
+  const iniciarJuego = (event) => {
     event.preventDefault(); // Orria berriro kargatzea saihestu
 
-    // Inprimakiko datuak hartu
-    const formData = new FormData(configForm);
-    
-    // Aukeratutako balioak jaso eta zenbaki osoetara bihurtu (parseInt)
-    const intentos = parseInt(formData.get('intentos'), 10);
-    const letras = parseInt(formData.get('letras'), 10);
+    // Hautatutako balioak irakurri
+    const intentosSeleccionados = parseInt(document.getElementById("intentos").value, 10);
+    const letrasSeleccionadas = parseInt(document.getElementById("letras").value, 10);
 
-    // Partida hasi hautatutako aukerekin
-    startGame({ intentos, letras });
-  });
+    // Inprimakia ezkutatu
+    setupForm.style.display = "none";
 
-  //Partida hasieratzeko funtzio nagusia
-  function startGame(config) {
-    console.log(`Konfiguratutako saialdiak: ${config.intentos}`);
-    console.log(`Konfiguratutako hizki kopurua: ${config.letras}`);
+    // Taula sortu bi for erabiliz
+    crearTablero(intentosSeleccionados, letrasSeleccionadas);
+  };
 
-    // Botoian feedback bisuala erakutsi
-    btnPlay.textContent = 'Kargatzen...';
-    btnPlay.disabled = true;
 
-    // Hemen hurrengo urratsa joango da: inprimakia ezkutatu eta taula marraztu
-  }
+  const crearTablero = (saialdiak, hizkiak) => {
+    board.innerHTML = ''; // Edukia garbitu
+
+    // 1. FOR: Saialdiak (errenkadak)
+    for (let i = 0; i < saialdiak; i++) {
+      const row = document.createElement('div');
+      row.classList.add('row');
+      row.dataset.row = i;
+
+      // 2. FOR: Hizkiak (gelaxkak)
+      for (let j = 0; j < hizkiak; j++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.col = j;
+        row.appendChild(cell);
+      }
+
+      board.appendChild(row);
+    }
+  };
+
+  // Inprimakiko submit gertaera entzun
+  setupForm.addEventListener("submit", iniciarJuego);
 
 });

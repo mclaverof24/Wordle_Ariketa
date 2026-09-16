@@ -20,7 +20,7 @@
                 <select id="intentos" name="intentos">
                     <option value="4">4</option>
                     <option value="5">5</option>
-                    <option value="6" selected>6</option> <!-- selected: Lehenetsitako aukera -->
+                    <option value="6" selected>6</option>
                     <option value="7">7</option>
                 </select>
             </div>
@@ -30,7 +30,7 @@
                 <label for="letras">nº de letras</label>
                 <select id="letras" name="letras">
                     <option value="4">4</option>
-                    <option value="5" selected>5</option><!-- selected: Lehenetsitako aukera -->
+                    <option value="5" selected>5</option>
                     <option value="6">6</option>
                     <option value="7">7</option>
                 </select>
@@ -39,6 +39,9 @@
             <!-- Hasiera emateko botoia -->
             <button type="submit" id="btn-jugar" class="btn-play">Jugar</button>
         </form>
+
+        <!-- Jokoaren taula (FORMULARITIK KANPO EGON BEHAR DA) -->
+        <div id="board" class="board"></div>
     </main>
 </body>
 

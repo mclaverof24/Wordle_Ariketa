@@ -10,6 +10,17 @@ body {
   color: #0f172a;
 }
 
+/* Contenedor principal sin restricciones rígidas */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
 /* Formulario de seleccion */
 .config-form {
   display: flex;
@@ -21,6 +32,7 @@ body {
   background-color: #ffffff;
   border-radius: 20px;
   box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 }
 
 .form-group {
@@ -49,15 +61,15 @@ select {
   outline: none;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
-/* Al seleccionar del desplegable */
 select:focus {
   border-color: #0f172a;
   background-color: #ffffff;
 }
 
-/* Boton de JUgar */
+/* Boton de Jugar */
 .btn-play {
   width: 100%;
   padding: 14px;
@@ -74,15 +86,46 @@ select:focus {
   transition: all 0.2s ease;
 }
 
-/* Efecto hover */
 .btn-play:hover {
   background: #38991f;
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(15, 23, 42, 0.25);
 }
 
-/* Efecto click */
 .btn-play:active {
   transform: translateY(1px);
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
+}
+
+/* Jokoaren taula nagusia */
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  margin-top: 24px;
+}
+
+/* Errenkada bakoitza */
+.row {
+  display: flex;
+  gap: 8px;
+}
+
+/* Gelaxka bakoitza (Irudiaren estilo bera) */
+.cell {
+  width: 52px;
+  height: 52px;
+  background-color: #ffffff;       /* Fondo zuria */
+  border: 2px solid #d3d6da;        /* Borde gris argia */
+  border-radius: 8px;              /* Ertz biribilduak */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #0f172a;                  /* Testu iluna */
+  box-sizing: border-box;
+  user-select: none;
 }
