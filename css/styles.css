@@ -193,3 +193,91 @@ select:focus {
   color: #ffffff !important;
   border-color: #787c7e !important;
 }
+
+/* Azken jolasen historiala */
+.history {
+  display: none;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  max-width: 360px;
+  margin-top: 24px;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.history-title {
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+  color: #0f172a;
+  text-align: center;
+}
+
+.history-list {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.history-item {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+}
+
+.history-item.win {
+  border-color: #6aaa64;
+}
+
+.history-item.loss {
+  border-color: #d3452c;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+}
+
+.history-word {
+  letter-spacing: 0.5px;
+  color: #0f172a;
+}
+
+.history-result {
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #ffffff;
+}
+
+.history-item.win .history-result {
+  background-color: #6aaa64;
+}
+
+.history-item.loss .history-result {
+  background-color: #d3452c;
+}
+
+.history-date {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.history-attempts {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: #334155;
+  word-break: break-word;
+}

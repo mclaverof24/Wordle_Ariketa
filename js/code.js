@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const setupForm = document.getElementById("setup-form");
     const board = document.getElementById("board");
     const keyboard = document.getElementById("keyboard");
+    const historySection = document.getElementById("history");
+    const historyList = document.getElementById("history-list");
+    const btnReplay = document.getElementById("btn-replay");
+
+    const HISTORIAL_KEY = "wordle-historial";
 
     // Jokoaren egoera aldagaiak
     let targetWord = "";
@@ -10,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentCol = 0;
     let maxRows = 0;
     let wordLength = 0;
+    let intentosRealizados = [];
 
     const KEYBOARD_LAYOUT = [
         ['Á', 'É', 'Í', 'Ó', 'Ú'],
@@ -27,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Resetear contadores
         currentRow = 0;
         currentCol = 0;
+        intentosRealizados = [];
 
         // 1. APIari deitu hitza lortzeko
         targetWord = await obtenerPalabraObjetivo(wordLength);
@@ -34,6 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 2. Inprimakia ezkutatu eta interfazea sortu
         setupForm.style.display = "none";
+        historySection.style.display = "none";
+        board.style.display = "";
+        keyboard.style.display = "";
         crearTablero(maxRows, wordLength);
         crearTeclado();
 
@@ -203,17 +213,117 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        intentosRealizados.push(wordEntered);
+
         // Jokoaren amaiera kudeatu
         if (wordEntered === targetWord) {
-            setTimeout(() => alert("Zorionak! Hitza asmatu duzu! 🎉"), 100);
             currentRow = maxRows;
+            setTimeout(() => {
+                alert("Zorionak! Hitza asmatu duzu! 🎉");
+                finalizarJuego(true);
+            }, 100);
         } else {
             currentRow++;
             currentCol = 0;
             if (currentRow >= maxRows) {
-                setTimeout(() => alert(`Ezin izan duzu lortu. Hitza zen: ${targetWord}`), 100);
+                setTimeout(() => {
+                    alert(`Ezin izan duzu lortu. Hitza zen: ${targetWord}`);
+                    finalizarJuego(false);
+                }, 100);
             }
         }
+    };
+
+    /**
+     * Partida amaitutakoan datuak localStorage-n gordetzeko funtzioa (azken 10ak)
+     */
+    const gordePartida = (irabazi) => {
+        const partida = {
+            hitza: targetWord,
+            saiakerak: intentosRealizados,
+            data: new Date().toLocaleString('es-ES'),
+            irabazi: irabazi
+        };
+
+        let historiala = [];
+        try {
+            historiala = JSON.parse(localStorage.getItem(HISTORIAL_KEY)) || [];
+        } catch (error) {
+            console.error("Errorea historiala irakurtzerakoan:", error);
+            historiala = [];
+        }
+
+        historiala.unshift(partida);
+        historiala = historiala.slice(0, 10);
+
+        localStorage.setItem(HISTORIAL_KEY, JSON.stringify(historiala));
+
+        return historiala;
+    };
+
+    /**
+     * Historialeko partidak zerrendan bistaratzeko funtzioa
+     */
+    const bistaratuHistoriala = (historiala) => {
+        historyList.innerHTML = '';
+
+        historiala.forEach((partida) => {
+            const item = document.createElement('li');
+            item.classList.add('history-item', partida.irabazi ? 'win' : 'loss');
+
+            const header = document.createElement('div');
+            header.classList.add('history-header');
+
+            const wordSpan = document.createElement('span');
+            wordSpan.classList.add('history-word');
+            wordSpan.textContent = partida.hitza;
+
+            const resultSpan = document.createElement('span');
+            resultSpan.classList.add('history-result');
+            resultSpan.textContent = partida.irabazi ? 'Irabazita' : 'Galduta';
+
+            header.appendChild(wordSpan);
+            header.appendChild(resultSpan);
+
+            const dateDiv = document.createElement('div');
+            dateDiv.classList.add('history-date');
+            dateDiv.textContent = partida.data;
+
+            const attemptsDiv = document.createElement('div');
+            attemptsDiv.classList.add('history-attempts');
+            attemptsDiv.textContent = partida.saiakerak.join(', ');
+
+            item.appendChild(header);
+            item.appendChild(dateDiv);
+            item.appendChild(attemptsDiv);
+
+            historyList.appendChild(item);
+        });
+    };
+
+    /**
+     * Jolasa amaitutakoan taula eta teklatua ezkutatu, partida gorde eta historiala erakusteko funtzioa
+     */
+    const finalizarJuego = (irabazi) => {
+        document.removeEventListener('keydown', manejarTecladoFisico);
+
+        board.style.display = "none";
+        keyboard.style.display = "none";
+
+        const historiala = gordePartida(irabazi);
+        bistaratuHistoriala(historiala);
+
+        historySection.style.display = "flex";
+    };
+
+    /**
+     * "Jugar de nuevo" botoiak konfigurazio-inprimakira itzultzeko funtzioa
+     */
+    const berrabiarazi = () => {
+        historySection.style.display = "none";
+        board.innerHTML = '';
+        keyboard.innerHTML = '';
+        setupForm.style.display = "flex";
     };
 
     const obtenerCeldaActual = (rowIdx, colIdx) => {
@@ -221,5 +331,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     setupForm.addEventListener("submit", iniciarJuego);
+    btnReplay.addEventListener("click", berrabiarazi);
 
 });
