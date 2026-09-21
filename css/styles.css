@@ -1,3 +1,33 @@
+/* ============================
+   Kolore-aldagaiak (CSS custom properties)
+   ============================ */
+:root {
+  --color-bg: #f8fafc;
+  --color-bg-soft: #f8fafc;
+  --color-surface: #ffffff;
+  --color-text: #0f172a;
+  --color-text-soft: #334155;
+  --color-muted: #64748b;
+  --color-border: #e2e8f0;
+  --color-border-strong: #d3d6da;
+
+  --color-primary: #0f172a;
+  --color-primary-hover: #38991f;
+  --color-on-primary: #ffffff;
+
+  --color-correct: #6aaa64;  /* Zuzena (berde) */
+  --color-present: #c9b458;  /* Existitzen da (hori) */
+  --color-absent: #787c7e;   /* Ez dago (gris) */
+  --color-incorrect: #d3452c; /* Galdutako partida (gorria) */
+
+  --color-key-hover: #bbb3ba;
+  --color-key-active: #a0a0a0;
+
+  --shadow-surface: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+  --shadow-btn: 0 4px 12px rgba(15, 23, 42, 0.15);
+  --shadow-btn-hover: 0 6px 20px rgba(15, 23, 42, 0.25);
+}
+
 /* Estilo principal */
 body {
   font-family: system-ui, -apple-system, sans-serif;
@@ -6,11 +36,11 @@ body {
   align-items: center;
   min-height: 100vh;
   margin: 0;
-  background-color: #f8fafc;
-  color: #0f172a;
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
-/* Contenedor principal sin restricciones rígidas */
+/* Contenedor principal sin restricciones rígidas (Flexbox: elementu bakarra, zutabetan pilatuta) */
 .container {
   display: flex;
   flex-direction: column;
@@ -21,7 +51,7 @@ body {
   box-sizing: border-box;
 }
 
-/* Formulario de seleccion */
+/* Formulario de seleccion (Flexbox: goitik behera lerrokatutako eremuak) */
 .config-form {
   display: flex;
   flex-direction: column;
@@ -29,9 +59,9 @@ body {
   width: 100%;
   max-width: 280px;
   padding: 32px;
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   border-radius: 20px;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-surface);
   box-sizing: border-box;
 }
 
@@ -45,7 +75,7 @@ body {
 label {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--color-muted);
   margin-bottom: 6px;
 }
 
@@ -54,10 +84,10 @@ select {
   width: 100%;
   padding: 12px;
   font-size: 0.95rem;
-  color: #0f172a;
-  border: 1px solid #e2e8f0;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
-  background-color: #f8fafc;
+  background-color: var(--color-bg-soft);
   outline: none;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -65,8 +95,8 @@ select {
 }
 
 select:focus {
-  border-color: #0f172a;
-  background-color: #ffffff;
+  border-color: var(--color-text);
+  background-color: var(--color-surface);
 }
 
 /* Boton de Jugar */
@@ -76,28 +106,28 @@ select:focus {
   font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: 0.3px;
-  color: #ffffff;
-  background: #0f172a;
+  color: var(--color-on-primary);
+  background: var(--color-primary);
   border: none;
   border-radius: 12px;
   cursor: pointer;
   margin-top: 8px;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+  box-shadow: var(--shadow-btn);
   transition: all 0.2s ease;
 }
 
 .btn-play:hover {
-  background: #38991f;
+  background: var(--color-primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.25);
+  box-shadow: var(--shadow-btn-hover);
 }
 
 .btn-play:active {
   transform: translateY(1px);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
+  box-shadow: var(--shadow-btn);
 }
 
-/* Jokoaren taula nagusia */
+/* Jokoaren taula nagusia (Flexbox: errenkadak zutabetan pilatuta) */
 .board {
   display: flex;
   flex-direction: column;
@@ -106,9 +136,11 @@ select:focus {
   margin-top: 24px;
 }
 
-/* Errenkada bakoitza */
+/* Errenkada bakoitza (Grid: hizki-kopurua aldakorra denez, zutabe automatikoak erabiltzen dira) */
 .row {
-  display: flex;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 52px;
   gap: 8px;
 }
 
@@ -116,21 +148,21 @@ select:focus {
 .cell {
   width: 52px;
   height: 52px;
-  background-color: #ffffff;       /* Fondo zuria */
-  border: 2px solid #d3d6da;        /* Borde gris argia */
-  border-radius: 8px;              /* Ertz biribilduak */
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-border-strong);
+  border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1.8rem;
   font-weight: bold;
   text-transform: uppercase;
-  color: #0f172a;                  /* Testu iluna */
+  color: var(--color-text);
   box-sizing: border-box;
   user-select: none;
 }
 
-/* Teklatu birtuala */
+/* Teklatu birtuala (Flexbox: errenkadak zutabetan pilatuta) */
 .keyboard {
   display: flex;
   flex-direction: column;
@@ -139,6 +171,7 @@ select:focus {
   align-items: center;
 }
 
+/* Teklatu-errenkada (Flexbox: tekla bakoitzak zabalera desberdina izan dezake) */
 .keyboard-row {
   display: flex;
   gap: 6px;
@@ -151,8 +184,8 @@ select:focus {
   padding: 0 8px;
   border: none;
   border-radius: 6px;
-  background-color: #d3d6da;
-  color: #0f172a;
+  background-color: var(--color-border-strong);
+  color: var(--color-text);
   font-size: 1.1rem;
   font-weight: bold;
   cursor: pointer;
@@ -164,11 +197,11 @@ select:focus {
 }
 
 .key:hover {
-  background-color: #bbb3ba;
+  background-color: var(--color-key-hover);
 }
 
 .key:active {
-  background-color: #a0a0a0;
+  background-color: var(--color-key-active);
 }
 
 .key-large {
@@ -177,24 +210,24 @@ select:focus {
 
 /* Clases de validación según especificación */
 .cell.ok, .key.ok {
-  background-color: #6aaa64 !important; /* Verde */
-  color: #ffffff !important;
-  border-color: #6aaa64 !important;
+  background-color: var(--color-correct) !important;
+  color: var(--color-on-primary) !important;
+  border-color: var(--color-correct) !important;
 }
 
 .cell.existe, .key.existe {
-  background-color: #c9b458 !important; /* Amarillo */
-  color: #ffffff !important;
-  border-color: #c9b458 !important;
+  background-color: var(--color-present) !important;
+  color: var(--color-on-primary) !important;
+  border-color: var(--color-present) !important;
 }
 
 .cell.no, .key.no {
-  background-color: #787c7e !important; /* Gris */
-  color: #ffffff !important;
-  border-color: #787c7e !important;
+  background-color: var(--color-absent) !important;
+  color: var(--color-on-primary) !important;
+  border-color: var(--color-absent) !important;
 }
 
-/* Azken jolasen historiala */
+/* Azken jolasen historiala (Flexbox: zutabetan pilatutako blokea) */
 .history {
   display: none;
   flex-direction: column;
@@ -203,19 +236,20 @@ select:focus {
   max-width: 360px;
   margin-top: 24px;
   padding: 24px;
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   border-radius: 20px;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-surface);
   box-sizing: border-box;
 }
 
 .history-title {
   margin: 0 0 16px;
   font-size: 1.1rem;
-  color: #0f172a;
+  color: var(--color-text);
   text-align: center;
 }
 
+/* Historial-zerrenda (Flexbox: partida-txartelak zutabetan pilatuta) */
 .history-list {
   list-style: none;
   margin: 0 0 20px;
@@ -230,18 +264,19 @@ select:focus {
 .history-item {
   padding: 10px 14px;
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  background-color: #f8fafc;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-soft);
 }
 
 .history-item.win {
-  border-color: #6aaa64;
+  border-color: var(--color-correct);
 }
 
 .history-item.loss {
-  border-color: #d3452c;
+  border-color: var(--color-incorrect);
 }
 
+/* Partidaren goiburua (Flexbox: hitza eta emaitza alde banatan) */
 .history-header {
   display: flex;
   justify-content: space-between;
@@ -251,33 +286,33 @@ select:focus {
 
 .history-word {
   letter-spacing: 0.5px;
-  color: #0f172a;
+  color: var(--color-text);
 }
 
 .history-result {
   font-size: 0.8rem;
   padding: 2px 8px;
   border-radius: 999px;
-  color: #ffffff;
+  color: var(--color-on-primary);
 }
 
 .history-item.win .history-result {
-  background-color: #6aaa64;
+  background-color: var(--color-correct);
 }
 
 .history-item.loss .history-result {
-  background-color: #d3452c;
+  background-color: var(--color-incorrect);
 }
 
 .history-date {
   margin-top: 4px;
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--color-muted);
 }
 
 .history-attempts {
   margin-top: 6px;
   font-size: 0.85rem;
-  color: #334155;
+  color: var(--color-text-soft);
   word-break: break-word;
 }
