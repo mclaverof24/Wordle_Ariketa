@@ -174,3 +174,22 @@ select:focus {
 .key-large {
   min-width: 65px;
 }
+
+/* Clases de validación según especificación */
+.cell.ok, .key.ok {
+  background-color: #6aaa64 !important; /* Verde */
+  color: #ffffff !important;
+  border-color: #6aaa64 !important;
+}
+
+.cell.existe, .key.existe {
+  background-color: #c9b458 !important; /* Amarillo */
+  color: #ffffff !important;
+  border-color: #c9b458 !important;
+}
+
+.cell.no, .key.no {
+  background-color: #787c7e !important; /* Gris */
+  color: #ffffff !important;
+  border-color: #787c7e !important;
+}

@@ -105,14 +105,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
-     * Teklatu fisikoaren sakatzeak bideratzeko funtzioa
+     * Teklatu fisikoaren sakatzeak bideratzeko funtzioa (BackSpace eta Delete/Supr onartuz)
      */
     const manejarTecladoFisico = (e) => {
         const key = e.key.toUpperCase();
 
         if (key === 'ENTER') {
             procesarEntrada('Enter');
-        } else if (key === 'DELETE') {
+        } else if (key === 'BACKSPACE' || key === 'DELETE') {
             procesarEntrada('DEL');
         } else if (/^[A-ZÁÉÍÓÚÑ]$/.test(key)) {
             procesarEntrada(key);
@@ -133,9 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else if (key === 'Enter') {
             if (currentCol === wordLength) {
-                console.log(`Errenkada amaituta (${currentRow}). Hitzaren egiaztapena egingo da.`);
-                currentRow++;
-                currentCol = 0;
+                comprobarPalabra();
             } else {
                 console.log("Ez zaude errenkadaren amaieran hitza bidaltzeko.");
             }
@@ -144,6 +142,76 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cell = obtenerCeldaActual(currentRow, currentCol);
                 cell.textContent = key;
                 currentCol++;
+            }
+        }
+    };
+
+    /**
+     * "Intro" premionatzerakoan letren egoera egiaztatzeko eta klaseak aplikatzeko logika
+     */
+    const comprobarPalabra = () => {
+        const rowCells = [];
+        let wordEntered = "";
+
+        for (let i = 0; i < wordLength; i++) {
+            const cell = obtenerCeldaActual(currentRow, i);
+            rowCells.push(cell);
+            wordEntered += cell.textContent;
+        }
+
+        const targetArray = targetWord.split('');
+        const classes = new Array(wordLength).fill('no');
+
+        // 1. Pasada: Posizio eta letra zuzenak ('ok')
+        for (let i = 0; i < wordLength; i++) {
+            if (wordEntered[i] === targetArray[i]) {
+                classes[i] = 'ok';
+                targetArray[i] = null;
+            }
+        }
+
+        // 2. Pasada: Hitzean dauden baina beste posizio batean daudenak ('existe')
+        for (let i = 0; i < wordLength; i++) {
+            if (classes[i] !== 'ok') {
+                const foundIdx = targetArray.indexOf(wordEntered[i]);
+                if (foundIdx !== -1) {
+                    classes[i] = 'existe';
+                    targetArray[foundIdx] = null;
+                }
+            }
+        }
+
+        // 3. Tableroko gelaxkei eta teklatu birtualari CSS klaseak jarri
+        for (let i = 0; i < wordLength; i++) {
+            const cell = rowCells[i];
+            const letter = wordEntered[i];
+            const statusClass = classes[i];
+
+            cell.classList.add(statusClass);
+
+            const keyButton = keyboard.querySelector(`.key[data-key="${letter}"]`);
+            if (keyButton) {
+                if (statusClass === 'ok') {
+                    keyButton.classList.remove('existe', 'no');
+                    keyButton.classList.add('ok');
+                } else if (statusClass === 'existe' && !keyButton.classList.contains('ok')) {
+                    keyButton.classList.remove('no');
+                    keyButton.classList.add('existe');
+                } else if (statusClass === 'no' && !keyButton.classList.contains('ok') && !keyButton.classList.contains('existe')) {
+                    keyButton.classList.add('no');
+                }
+            }
+        }
+
+        // Jokoaren amaiera kudeatu
+        if (wordEntered === targetWord) {
+            setTimeout(() => alert("Zorionak! Hitza asmatu duzu! 🎉"), 100);
+            currentRow = maxRows;
+        } else {
+            currentRow++;
+            currentCol = 0;
+            if (currentRow >= maxRows) {
+                setTimeout(() => alert(`Ezin izan duzu lortu. Hitza zen: ${targetWord}`), 100);
             }
         }
     };
