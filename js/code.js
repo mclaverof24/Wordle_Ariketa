@@ -24,6 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
         ['Enter', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'DEL']
     ];
 
+    /**
+     * Elementu bat erakusteko/ezkutatzeko funtzio orokorra
+     * (iniciarJuego, finalizarJuego eta berrabiarazi-n errepikatzen zen logika bateratzen du)
+     */
+    const erakutsi = (elementua, ikusgai, display = "flex") => {
+        elementua.style.display = ikusgai ? display : "none";
+    };
+
     const iniciarJuego = async (event) => {
         event.preventDefault();
 
@@ -40,10 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(`Lortutako hitza (sekretua): ${targetWord}`);
 
         // 2. Inprimakia ezkutatu eta interfazea sortu
-        setupForm.style.display = "none";
-        historySection.style.display = "none";
-        board.style.display = "";
-        keyboard.style.display = "";
+        erakutsi(setupForm, false);
+        erakutsi(historySection, false);
+        erakutsi(board, true, "flex");
+        erakutsi(keyboard, true, "flex");
         crearTablero(maxRows, wordLength);
         crearTeclado();
 
@@ -218,20 +226,25 @@ document.addEventListener('DOMContentLoaded', () => {
         // Jokoaren amaiera kudeatu
         if (wordEntered === targetWord) {
             currentRow = maxRows;
-            setTimeout(() => {
-                alert("Zorionak! Hitza asmatu duzu! 🎉");
-                finalizarJuego(true);
-            }, 100);
+            amaitu("Zorionak! Hitza asmatu duzu! 🎉", true);
         } else {
             currentRow++;
             currentCol = 0;
             if (currentRow >= maxRows) {
-                setTimeout(() => {
-                    alert(`Ezin izan duzu lortu. Hitza zen: ${targetWord}`);
-                    finalizarJuego(false);
-                }, 100);
+                amaitu(`Ezin izan duzu lortu. Hitza zen: ${targetWord}`, false);
             }
         }
+    };
+
+    /**
+     * Jolasaren amaierako mezua erakutsi eta jolasa ixteko funtzio bakarra
+     * (irabazi zein galdu kasuan errepikatzen zen logika bateratzen du)
+     */
+    const amaitu = (mensaje, irabazi) => {
+        setTimeout(() => {
+            alert(mensaje);
+            finalizarJuego(irabazi);
+        }, 100);
     };
 
     /**
@@ -262,43 +275,41 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
+     * Elementu bat sortu, klasea eta testua ezartzeko funtzio orokorra
+     * (bistaratuHistoriala-n errepikatzen zen sorkuntza-logika bateratzen du)
+     */
+    const sortuElementua = (etiketa, klasea, testua) => {
+        const elementua = document.createElement(etiketa);
+        elementua.classList.add(klasea);
+        elementua.textContent = testua;
+        return elementua;
+    };
+
+    /**
+     * Partida bakoitzaren zerrenda-elementua (<li>) sortzeko funtzioa
+     */
+    const sortuHistorialItema = (partida) => {
+        const item = document.createElement('li');
+        item.classList.add('history-item', partida.irabazi ? 'win' : 'loss');
+
+        const header = document.createElement('div');
+        header.classList.add('history-header');
+        header.appendChild(sortuElementua('span', 'history-word', partida.hitza));
+        header.appendChild(sortuElementua('span', 'history-result', partida.irabazi ? 'Irabazita' : 'Galduta'));
+
+        item.appendChild(header);
+        item.appendChild(sortuElementua('div', 'history-date', partida.data));
+        item.appendChild(sortuElementua('div', 'history-attempts', partida.saiakerak.join(', ')));
+
+        return item;
+    };
+
+    /**
      * Historialeko partidak zerrendan bistaratzeko funtzioa
      */
     const bistaratuHistoriala = (historiala) => {
         historyList.innerHTML = '';
-
-        historiala.forEach((partida) => {
-            const item = document.createElement('li');
-            item.classList.add('history-item', partida.irabazi ? 'win' : 'loss');
-
-            const header = document.createElement('div');
-            header.classList.add('history-header');
-
-            const wordSpan = document.createElement('span');
-            wordSpan.classList.add('history-word');
-            wordSpan.textContent = partida.hitza;
-
-            const resultSpan = document.createElement('span');
-            resultSpan.classList.add('history-result');
-            resultSpan.textContent = partida.irabazi ? 'Irabazita' : 'Galduta';
-
-            header.appendChild(wordSpan);
-            header.appendChild(resultSpan);
-
-            const dateDiv = document.createElement('div');
-            dateDiv.classList.add('history-date');
-            dateDiv.textContent = partida.data;
-
-            const attemptsDiv = document.createElement('div');
-            attemptsDiv.classList.add('history-attempts');
-            attemptsDiv.textContent = partida.saiakerak.join(', ');
-
-            item.appendChild(header);
-            item.appendChild(dateDiv);
-            item.appendChild(attemptsDiv);
-
-            historyList.appendChild(item);
-        });
+        historiala.forEach((partida) => historyList.appendChild(sortuHistorialItema(partida)));
     };
 
     /**
@@ -307,23 +318,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const finalizarJuego = (irabazi) => {
         document.removeEventListener('keydown', manejarTecladoFisico);
 
-        board.style.display = "none";
-        keyboard.style.display = "none";
+        erakutsi(board, false);
+        erakutsi(keyboard, false);
 
         const historiala = gordePartida(irabazi);
         bistaratuHistoriala(historiala);
 
-        historySection.style.display = "flex";
+        erakutsi(historySection, true, "flex");
     };
 
     /**
      * "Jugar de nuevo" botoiak konfigurazio-inprimakira itzultzeko funtzioa
      */
     const berrabiarazi = () => {
-        historySection.style.display = "none";
+        erakutsi(historySection, false);
         board.innerHTML = '';
         keyboard.innerHTML = '';
-        setupForm.style.display = "flex";
+        erakutsi(setupForm, true, "flex");
     };
 
     const obtenerCeldaActual = (rowIdx, colIdx) => {
