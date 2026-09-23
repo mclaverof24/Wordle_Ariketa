@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const obtenerPalabraObjetivo = async (longitud) => {
         try {
-            const response = await fetch(`https://words-api-sy2x.onrender.com/api/word?lang=eu&length=${longitud}&number=1`);
+            const response = await fetch(`https://words-api-sy2x.onrender.com/api/word?lang=es&length=${longitud}&number=1`);
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
