@@ -65,12 +65,24 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const obtenerPalabraObjetivo = async (longitud) => {
         try {
-            const response = await fetch(`https://random-word-api.herokuapp.com/word?lang=es&length=${longitud}`);
+            const response = await fetch(`https://words-api-sy2x.onrender.com/api/word?lang=eu&length=${longitud}&number=1`);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const data = await response.json();
-            return data[0].toUpperCase();
+
+            // Si la API devuelve un array de strings: ["PALABRA"]
+            if (Array.isArray(data) && data.length > 0) {
+                return data[0].toUpperCase();
+            }
+
+            // Si la API devuelve un objeto (ej: { word: "palabra" } o { words: [...] })
+            return (data.word || data.words?.[0] || data[0]).toUpperCase();
         } catch (error) {
             console.error("Errorea hitza kargatzerakoan:", error);
-            return "ZAZPI".slice(0, longitud).toUpperCase();
+            return "ZAZPIKO".slice(0, longitud).toUpperCase();
         }
     };
 
